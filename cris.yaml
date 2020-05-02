@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Cycle Route Information API (CRIS)
+  description: An API to get OpenStreetMap Cycle Routes Informations.
+  contact:
+    name: Martin Kucharzewski
+    email: 'martin@kucharzewski.de'
+    url: 'http://www.kucharzewski.de'
+  license:
+    name: MIT
+servers:
+  - url: 'https://github.com/manuelottlik/ct-oas/oas.yaml'
+paths: 
+  /cycleroutes:
+    get:
+      description: |
+        Returns all cycle routes
+      operationId: findCycleRoutes
+      parameters:
+        - name: tags
+          in: query
+          description: tags to filter by
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: limit
+          in: query
+          description: maximum number of results to return
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: cycle routes response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CycleRoute'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+
+    CycleRoute:
+      required:
+        - id
+        - name  
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        tag:
+          type: string    
+
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
